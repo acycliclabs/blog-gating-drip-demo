@@ -3,6 +3,8 @@
 var provider;
 var selectedAccount = null;
 var signer;
+var contractAddress = '0x2953399124f0cbb46d2cbacd8a89cf0599974963';
+var baseUrl = 'http://localhost:3001';
 
 function showData() {
     $('#content-wrap').removeClass('hidden');
@@ -15,7 +17,7 @@ function hideData() {
 }
 
 (async function () {
-    hideData();
+    updateAccessState(false);
     // Check Injected Metamask
     if (await checkMetamask() === true) {
         console.log('Metamask Found. Checking for account access...');
@@ -56,6 +58,14 @@ async function connectWallet() {
 
 async function checkNFT(account) {
     console.log('Checking NFT for...', account);
+    let uri = '/v1/nft/all?account='+parseQueryAccount(account)+'&contractAddress='+parseQueryAccount(contractAddress)
+    let nftExists = await callDripVerse(uri, account, contractAddress);
+    if (nftExists && nftExists!== undefined) {
+        updateAccessState(true);
+    } else {
+        console.log('You do not have required NFT to view this post! Try switching account or wallet and trying again.');
+    }
+    return;
 }
 
 function updateAccessState(state) {
@@ -73,3 +83,22 @@ $('#connect-wallet-btn').click(async function(e) {
     console.log('Metamask Conneced!');
     await checkNFT(selectedAccount);
 });
+
+async function callDripVerse(uri) {
+    console.log('uri:', uri);
+    let url = baseUrl + uri;
+    await axios({
+        method: 'get',
+        url: url
+    }).then(function (response) {
+        console.log('response:', response);
+        return response;
+    }).catch(function (error) {
+        console.log('error:', error);
+        return null;
+    });
+}
+
+function parseQueryAccount(address) {
+    return address.split('0x')[1];
+}
