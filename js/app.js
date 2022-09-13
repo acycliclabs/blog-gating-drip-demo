@@ -17,19 +17,19 @@ function hideData() {
 }
 
 (async function () {
-    updateAccessState(true);
+    updateAccessState(false);
     // Check Injected Metamask
-    // if (await checkMetamask() === true) {
-    //     console.log('Metamask Found. Checking for account access...');
-    //     console.log('selectedAccount:', selectedAccount);
-    //     if(selectedAccount !== null) {
-    //         console.log('Account Selected:', selectedAccount);
-    //         await checkNFT(selectedAccount);
-    //         // if (checkNFT(account)) {
-    //         //     showData();
-    //         // }
-    //     }
-    // }
+    if (await checkMetamask() === true) {
+        console.log('Metamask Found. Checking for account access...');
+        console.log('selectedAccount:', selectedAccount);
+        if(selectedAccount !== null) {
+            console.log('Account Selected:', selectedAccount);
+            await checkNFT(selectedAccount);
+            // if (checkNFT(account)) {
+            //     showData();
+            // }
+        }
+    }
 })();
 
 async function checkMetamask() {
