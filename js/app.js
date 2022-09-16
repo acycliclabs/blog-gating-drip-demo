@@ -4,7 +4,17 @@ var provider;
 var selectedAccount = null;
 var signer;
 var contractAddress = '0x2953399124f0cbb46d2cbacd8a89cf0599974963';
-var baseUrl = 'http://localhost:3001';
+var baseUrl = '';
+
+function setBaseUrl() {
+    console.log('host:', window.location.host);
+    console.log('check:', window.location.host.includes('localhost'));
+    if (window.location.host.includes('localhost')) {
+        baseUrl = 'http://localhost:3001';
+    } else {
+        baseUrl = 'https://api.dripverse.org';
+    }
+}
 
 function showData() {
     $('#content-wrap').removeClass('hidden');
@@ -17,18 +27,24 @@ function hideData() {
 }
 
 (async function () {
-    updateAccessState(false);
-    // Check Injected Metamask
-    if (await checkMetamask() === true) {
-        console.log('Metamask Found. Checking for account access...');
-        console.log('selectedAccount:', selectedAccount);
-        if(selectedAccount !== null) {
-            console.log('Account Selected:', selectedAccount);
-            await checkNFT(selectedAccount);
-            // if (checkNFT(account)) {
-            //     showData();
-            // }
+    setBaseUrl();
+    console.log('baseUrl:', baseUrl);
+    if (baseUrl.length > 0) {
+        updateAccessState(false);
+        // Check Injected Metamask
+        if (await checkMetamask() === true) {
+            console.log('Metamask Found. Checking for account access...');
+            console.log('selectedAccount:', selectedAccount);
+            if(selectedAccount !== null) {
+                console.log('Account Selected:', selectedAccount);
+                await checkNFT(selectedAccount);
+                // if (checkNFT(account)) {
+                //     showData();
+                // }
+            }
         }
+    } else {
+        console.log('Unknown Domain. Please contact support@dripverse.org!');
     }
 })();
 
