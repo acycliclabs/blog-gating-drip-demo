@@ -82,7 +82,7 @@ async function checkNFT(account) {
     let uri = '/v1/utility/verify?p='+projectId;
     let data = {
         utilityId: utilityId,
-        account: parseQueryAccount(account)
+        account: account
     };
     let nftExists = await callDripVerse(uri, 'post', data);
     if (nftExists && nftExists!== undefined) {
