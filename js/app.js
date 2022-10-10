@@ -47,6 +47,13 @@ function hideData() {
         }
     } else {
         console.log('Unknown Domain. Please contact support@dripverse.org!');
+        Prompt.create({
+            title: "App Initialisation Failed!",
+            text: "Something went wrong! Please hard refresh or clear cache and try again!",
+            type: "error",
+            position: "bottom-right",
+            timeout: 5000
+        });
     }
 })();
 
@@ -57,6 +64,13 @@ async function checkMetamask() {
         metamaskFound = true;
     } else {
         console.log('No Metamask Detected!');
+        Prompt.create({
+            title: "No Metamask Detected!",
+            text: "This app works only with Metamask. Please install Metamask on this browser to continue.",
+            type: "warning",
+            position: "bottom-right",
+            timeout: 5000
+        });
     }
     return metamaskFound;
 }
@@ -70,6 +84,13 @@ async function connectWallet() {
         signer = provider.getSigner();
     } else {
         console.log('Please install Metamask on this browser or give access to this web page!');
+        Prompt.create({
+            title: "No Metamask Found!",
+            text: "This app works only with Metamask. Please install Metamask on this browser to continue.",
+            type: "warning",
+            position: "bottom-right",
+            timeout: 5000
+        });
     }
     return selectedAccount;
 }
@@ -124,6 +145,13 @@ async function callDripVerse(uri, method, data) {
             console.log('response:', response);
             if (response.status === 200) {
                 console.log('Success!');
+                Prompt.create({
+                    title: "Verified",
+                    text: "Access Granted!",
+                    type: "success",
+                    position: "bottom-right",
+                    timeout: 5000
+                });
                 updateAccessState(true);
                 return true;
             } else {
