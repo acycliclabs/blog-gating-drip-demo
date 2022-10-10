@@ -85,7 +85,9 @@ async function checkNFT(account) {
         account: account
     };
     let nftExists = await callDripVerse(uri, 'post', data);
+    console.log('nftExists:', nftExists);
     if (nftExists && nftExists!== undefined) {
+        console.log('show data');
         updateAccessState(true);
     } else {
         console.log('You do not have required NFT to view this post! Try switching account or wallet and trying again.');
@@ -130,7 +132,10 @@ async function callDripVerse(uri, method, data) {
             data: data
         }).then(function (response) {
             console.log('response:', response);
-            return response;
+            if (response.status === 200) {
+                return true;
+            }
+            return false;
         }).catch(function (error) {
             console.log('error:', error);
             return null;
