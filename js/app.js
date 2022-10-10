@@ -3,8 +3,10 @@
 var provider;
 var selectedAccount = null;
 var signer;
-var contractAddress = '0x2953399124f0cbb46d2cbacd8a89cf0599974963';
+var contractAddress = '';
 var baseUrl = '';
+var projectId = '2';
+var utilityId = '4';
 
 function setBaseUrl() {
     console.log('host:', window.location.host);
@@ -41,6 +43,9 @@ function hideData() {
                 // if (checkNFT(account)) {
                 //     showData();
                 // }
+            } else {
+                await connectWallet();
+                console.log('selectedAccount:', selectedAccount);
             }
         }
     } else {
@@ -74,8 +79,12 @@ async function connectWallet() {
 
 async function checkNFT(account) {
     console.log('Checking NFT for...', account);
-    let uri = '/v1/nft/all?account='+parseQueryAccount(account)+'&contractAddress='+parseQueryAccount(contractAddress)
-    let nftExists = await callDripVerse(uri, account, contractAddress);
+    let uri = '/v1/utility/verify?p='+projectId;
+    let data = {
+        utilityId: utilityId,
+        account: parseQueryAccount(account)
+    };
+    let nftExists = await callDripVerse(uri, 'post', data);
     if (nftExists && nftExists!== undefined) {
         updateAccessState(true);
     } else {
@@ -100,19 +109,34 @@ $('#connect-wallet-btn').click(async function(e) {
     await checkNFT(selectedAccount);
 });
 
-async function callDripVerse(uri) {
+async function callDripVerse(uri, method, data) {
     console.log('uri:', uri);
     let url = baseUrl + uri;
-    await axios({
-        method: 'get',
-        url: url
-    }).then(function (response) {
-        console.log('response:', response);
-        return response;
-    }).catch(function (error) {
-        console.log('error:', error);
-        return null;
-    });
+    if (method === 'get') {
+        await axios({
+            method: method,
+            url: url
+        }).then(function (response) {
+            console.log('response:', response);
+            return response;
+        }).catch(function (error) {
+            console.log('error:', error);
+            return null;
+        });
+    } else {
+        await axios({
+            method: method,
+            url: url,
+            data: data
+        }).then(function (response) {
+            console.log('response:', response);
+            return response;
+        }).catch(function (error) {
+            console.log('error:', error);
+            return null;
+        });
+    }
+    
 }
 
 function parseQueryAccount(address) {
