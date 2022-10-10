@@ -133,8 +133,10 @@ async function callDripVerse(uri, method, data) {
         }).then(function (response) {
             console.log('response:', response);
             if (response.status === 200) {
+                console.log('Success!');
                 return true;
             }
+            console.log('status:', response.status);
             return false;
         }).catch(function (error) {
             console.log('error:', error);
