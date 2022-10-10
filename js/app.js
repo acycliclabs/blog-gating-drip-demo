@@ -40,9 +40,6 @@ function hideData() {
             if(selectedAccount !== null) {
                 console.log('Account Selected:', selectedAccount);
                 await checkNFT(selectedAccount);
-                // if (checkNFT(account)) {
-                //     showData();
-                // }
             } else {
                 await connectWallet();
                 console.log('selectedAccount:', selectedAccount);
@@ -131,12 +128,26 @@ async function callDripVerse(uri, method, data) {
                 return true;
             } else {
                 console.log('You do not have required NFT to view this post! Try switching account or wallet and trying again.');
+                Prompt.create({
+                    title: "Unauthorised",
+                    text: "You do not have required NFT to view this post! Try switching account or wallet and trying again.",
+                    type: "error",
+                    position: "bottom-right",
+                    timeout: 5000
+                });
             }
             console.log('status:', response.status);
             return false;
         }).catch(function (error) {
             console.log('error:', error);
             console.log('You do not have required NFT to view this post! Try switching account or wallet and trying again.');
+            Prompt.create({
+                title: "Unauthorised 2",
+                text: "You do not have required NFT to view this post! Try switching account or wallet and trying again.",
+                type: "error",
+                position: "bottom-right",
+                timeout: 5000
+            });
             return null;
         });
     }
