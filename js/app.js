@@ -84,14 +84,7 @@ async function checkNFT(account) {
         utilityId: utilityId,
         account: account
     };
-    let nftExists = await callDripVerse(uri, 'post', data);
-    console.log('nftExists:', nftExists);
-    if (nftExists && nftExists!== undefined) {
-        console.log('show data');
-        updateAccessState(true);
-    } else {
-        console.log('You do not have required NFT to view this post! Try switching account or wallet and trying again.');
-    }
+    await callDripVerse(uri, 'post', data);
     return;
 }
 
@@ -134,12 +127,16 @@ async function callDripVerse(uri, method, data) {
             console.log('response:', response);
             if (response.status === 200) {
                 console.log('Success!');
+                updateAccessState(true);
                 return true;
+            } else {
+                console.log('You do not have required NFT to view this post! Try switching account or wallet and trying again.');
             }
             console.log('status:', response.status);
             return false;
         }).catch(function (error) {
             console.log('error:', error);
+            console.log('You do not have required NFT to view this post! Try switching account or wallet and trying again.');
             return null;
         });
     }
