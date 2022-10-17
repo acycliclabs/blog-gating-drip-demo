@@ -5,8 +5,8 @@ var selectedAccount = null;
 var signer;
 var contractAddress = "";
 var baseUrl = "";
-var projectId = "2";
-var utilityId = "4";
+var projectApiKey = "86ae03775df95278c8525626d2abeb1123bf3220";
+var utilityId = "3";
 var dripSDK = null;
 
 function setBaseUrl() {
@@ -48,11 +48,8 @@ function hideData() {
         await connectWallet();
         console.log("selectedAccount:", selectedAccount);
         if (dripSDK === null) {
-            dripSDK = new window.drip({
-              network: "alpha",
-              key: selectedAccount,
-              project: projectId,
-            });
+            dripSDK = new window.drip(projectApiKey);
+            console.log("Connected..", await dripSDK.status());
           }
       }
     }
@@ -110,15 +107,12 @@ async function connectWallet() {
 
 async function checkNFT(account) {
   console.log("Checking NFT for...", account);
-  let uri = "/v1/utility/verify?p=" + projectId;
-  let data = {
-    utilityId: utilityId,
-    account: account,
-  };
   try {
     // const utility = await dripSDK.getUtility({});
     // console.log(utility);
-    const res = await dripSDK.verifyUtility(utilityId, account);
+    console.log(utilityId)
+    console.log(account)
+    const res = await dripSDK.hasAccess(utilityId, account);
     console.log("Verification Status", res);
     if(res) {
         updateAccessState(true);
